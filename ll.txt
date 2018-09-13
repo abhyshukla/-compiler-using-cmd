@@ -1,0 +1,87 @@
+import java.awt.event.*;
+import javax.swing.*;
+public class ll implements ActionListener
+{
+    int flag;
+    JFrame d;
+    JLabel l1,l2;
+    JTextField tf1;
+    JButton b;
+    JRadioButton r1,r2,r3;
+    ll()
+    {
+        flag=0;
+        d = new JFrame();
+        l1 = new JLabel("Class name");
+        tf1 = new JTextField(10);
+        l2 = new JLabel("Class Type");
+        r1 = new JRadioButton("Class file");
+        r2 = new JRadioButton("Applet file");
+        r3 = new JRadioButton("Interface file");
+        b = new JButton("Enter");
+        ButtonGroup g = new ButtonGroup();
+        g.add(r1);g.add(r2);g.add(r3);
+        
+        r1.addActionListener(this);
+        r2.addActionListener(this);
+        r3.addActionListener(this);
+        b.addActionListener(this);
+        
+        l1.setBounds(50,25,100,25);
+        tf1.setBounds(50,50,100,25);
+        l2.setBounds(50,100,100,25);
+        r1.setBounds(50,125,100,25);
+        r2.setBounds(50,150,100,25);
+        r3.setBounds(50,175,100,25);
+        b.setBounds(50,200,100,25);
+        
+        d.add(l1);
+        d.add(tf1);
+        d.add(l2);
+        d.add(r1);
+        d.add(r2);
+        d.add(r3);
+        d.add(b);
+        
+        d.setLocation(500,250);
+        d.setLayout(null);
+        d.setSize(300,300);
+        d.setVisible(true);
+    }
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource()==r1)
+             flag=1;
+        if(e.getSource()==r2)
+             flag=2;
+        if(e.getSource()==r3)
+             flag=3;
+        if(e.getSource()==b)
+        {
+            String file="";
+            if(tf1.getText().equals("")||flag==0)
+            {
+                JOptionPane.showMessageDialog(null,"Enter class name or class type");
+            }
+            else
+            {
+                if(flag==1)
+                {
+                    file = "import java.util.*; \npublic class "+tf1.getText()+"\n{\n \tpublic static void main(String args[]) \n\t{\n\t}\n}";
+                }
+                if(flag==3)
+                {
+                    file = "interface "+tf1.getText()+"\n{\n}";
+                }
+                if(flag==2)
+                {
+                    file = "import java.awt.*;\n import javax.swing.*; \nclass "+tf1.getText()+" extends JApplet\n{\n\tvoid init()\n\t{\n\t}\n"+"\tvoid start()\n\t{\n\t}\n"+"\tvoid stop()\n\t{\n\t}\n"+"\tvoid destroy()\n\t{\n\t}\n"+"\tvoid paint(Graphics g)"+"\n"+"\t{\n\n\t}"+"\n"+"}";
+                }
+                MyFrame.ta.setText(file);
+                d.setVisible(false);
+                MyFrame.f.setTitle("Untitled");
+            }
+            
+        }
+    }
+}

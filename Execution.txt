@@ -1,0 +1,165 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+
+public class Execution
+{
+    JDialog cmessage;
+    Runtime r = Runtime.getRuntime();
+    void fcompile()
+    {
+        try
+        {
+          //  System.out.println("JAVAC RUN");
+            Process p1 = r.exec("javac "+MyFrame.f.getTitle());
+            System.out.println("javac "+MyFrame.f.getTitle());
+            JDialog ebox = new JDialog(MyFrame.f,"Output",true);
+            JTextArea eta = new JTextArea();
+            eta.setFont(new Font("Times New Roman",Font.PLAIN,18));
+            JScrollPane jsp = new JScrollPane(eta);
+            ebox.getContentPane().add(jsp);
+            InputStream eis = p1.getErrorStream();
+            BufferedInputStream ebs = new BufferedInputStream(eis);
+            int eb;
+            String estr=new String();
+            while((eb=ebs.read())!=-1)
+            {
+                estr= estr+String.valueOf((char)eb);
+            }
+            eta.setBackground(Color.black);
+            eta.setForeground(Color.white);
+            eta.setText(estr);
+            eta.setEditable(false);
+            if(estr.equals(""))
+            {
+                cmessage = new JDialog(MyFrame.f,"Compile",false);
+                Container cm = cmessage.getContentPane();
+                cm.setLayout(new GridLayout(3,1));
+                cm.add(new JLabel(new ImageIcon("cupanim.gif")));
+                cm.add(new JLabel("Class File Generated."));
+                cmessage.addKeyListener(new dclose());
+                cmessage.setBounds(200,150,300,300);
+                cmessage.setVisible(true);
+            }
+            else
+            {
+                ebox.setSize(500,300);
+                ebox.setVisible(true);
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("File can not be compiled."+e);
+        }
+    }
+    class dclose extends KeyAdapter
+    {
+        public void KeyPressed(KeyEvent evt)
+        {
+            if(evt.getKeyCode()==KeyEvent.VK_ENTER)
+                cmessage.dispose();
+        }
+    }
+    void frun()
+    {
+        cmessage.dispose();
+        try
+        {
+            TextArea ta1 = new TextArea();
+            ta1.setFont(new Font("Times New Roman",Font.PLAIN,18));
+            ta1.setBackground(Color.black);
+            ta1.setForeground(Color.white);
+            JDialog op = new JDialog(MyFrame.f,"output",false);
+            op.getContentPane().add(ta1);
+            
+            String s = File1.file;	//file name
+            String data = MyFrame.ta.getText();
+            System.out.println(data);	//printing file directory
+            String d = File1.dir;	//file directory
+            
+            System.out.println(d);	//file name with java extension
+            System.out.println(s);  //file name
+            int slen=s.length();
+            char ch[] = new char[slen-5];
+            for(int i =0;i<s.length();i++)
+            {
+                s.getChars(0,(slen-5),ch,0);
+            }
+            String st = new String(ch);
+            System.out.println("st = "+st);
+            String ExecCommand = "java -cp "+File1.dir +" "+st;
+            
+            int b;
+            Runtime r1 = Runtime.getRuntime();
+            String cp = "cd "+File1.dir;
+        
+            Process p1 = r1.exec(ExecCommand); //r = runtime
+            InputStream is = p1.getInputStream();
+            BufferedInputStream bs = new BufferedInputStream(is);
+            String str= new String();
+            while((b=bs.read())!=-1)
+            {
+            	System.out.println("loop");
+                str=str+String.valueOf((char)b);
+            }
+            System.out.println("str ="+str);
+            ta1.setText(str);
+            op.setBounds(100,150,600,300);
+            op.setVisible(true);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        System.out.println("");
+    }
+    void Rapplet()
+    {
+        try
+        {
+            String s = File1.file;
+            String d = File1.dir;
+            System.out.println(s);
+            System.out.println(d);
+            int slen = s.length();
+            char ch[] = new char[slen-5];
+            for(int i=0;i<s.length();i++)
+            {
+                s.getChars(0,(slen-5),ch,0);
+            }
+            String st = new String(ch);
+            String st1 = "<html>\n"+
+                         "<head>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n"+
+                         "<title>"+st+" applet</title>\n"+
+                         "</head>\n"+
+                         "<body>\n"+
+                         "<h1>"+st+" Applet</h1>\n"+
+                         "<hr>\n"+
+                         "<applet code=\""+st+".class\"\n"+ 
+                         " width=500\n"+ 
+                         " height=500\n"+
+                         " codebase=\".\"\n"+
+                         " archive=\"file:/C:/Program%20Files%20(x86)/BlueJ/lib/bluejcore.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/junit-4.8.2.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/mysql-connector-java.jar,file:/C:/Users/hp/Desktop/jsdk2.1/mysql-connector-java-5.0.8-bin.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/mysql-connector-java-5.0.8-bin.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/mysql-connector-java.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/pi4j-core.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/pi4j-device.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/pi4j-gpio-extension.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/pi4j-service.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/server.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/servlet-api-3.0.jar,file:/C:/Program%20Files%20(x86)/BlueJ/lib/userlib/servlet.jar,file:/C:/Users/hp/Documents/lesson2/cdac/\"\n"+
+                         " alt=\"Your browser understands the &lt;APPLET&gt; tag but isn't running the applet, for some reason.\"\n"+
+                         " >\n"+
+             
+                         "Your browser is ignoring the &lt;APPLET&gt; tag!\n"+      
+                         "</applet>\n"+
+                         "<hr>\n"+
+                         "</body>\n"+
+                         "</html>\n";
+            System.out.println(st);
+            byte b[]=st1.getBytes();
+            FileOutputStream fo = new FileOutputStream(st+".html");
+            fo.write(b);
+            Runtime r1 = Runtime.getRuntime();
+            r1.exec("appletviewer "+st+".html");
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}

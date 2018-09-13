@@ -1,0 +1,346 @@
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.text.PlainDocument;
+
+import java.awt.event.*;
+import java.io.*;
+public class MyFrame implements ActionListener,ItemListener,WindowListener 
+{
+    static JFrame f;
+    JPanel p1,p2;
+    JToolBar t;
+    JMenuBar b;
+    JMenu File,Edit,Execute,Help,Format;
+    JMenuItem Open,Save,SaveAs,Close,New;
+    JMenuItem Cut,Copy,Paste,SelectAll,undo,color,ffont;
+    JMenuItem Compile,Run,Run_Applet;
+    JMenuItem Help1,About;
+    static JTextArea ta;
+    JScrollPane sp;
+    String data,data2;
+    int sizer;
+    static JButton bold,italic;
+    JButton c,r,button[];
+    String imagepath[] = {"NEW.gif","OPEN.gif","SAVE.gif","CUT.gif","COPY.gif","PASTE.gif","PRINT.gif"};
+    ImageIcon i1;
+    String size1[] = new String[50];
+    static JComboBox cb1,cb2;
+    static boolean vstyle=true,vsize=true;
+    String fselect1="Times New Roman",fselect2="10";
+    static Color bg;
+    File1 ob1 = new File1();
+    Environment envir = new Environment();
+    Execution exe = new Execution();
+    
+    MyFrame()
+    {
+        f= new JFrame("Untitled");
+        f.addWindowListener(this);
+        f.setLayout(new BorderLayout());
+        p1 = new JPanel();
+        p1.setLayout(new BorderLayout());
+        t = new JToolBar();
+        ta =new JTextArea();
+        ta.setBackground(Color.LIGHT_GRAY);
+        ta.setFont(new Font("Times New Roman",Font.PLAIN,26));
+        GraphicsEnvironment gc = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String font[] = gc.getAvailableFontFamilyNames();
+        cb1 = new JComboBox(font);
+        cb1.setSelectedItem("Times New Roman");
+        button = new JButton[7];
+        for(int i=0;i<7;i++)
+        {
+            i1 = new ImageIcon(imagepath[i]);
+            button[i] = new JButton(i1);
+            button[i].setBorder(null);
+            t.add(button[i]);
+        }
+        t.addSeparator();
+        t.add(cb1);
+        for(int i=0;i<50;i++)
+        {
+            size1[i]=String.valueOf(i*2+2);
+        }
+        cb2 = new JComboBox(size1);
+        cb2.setSelectedItem("26");
+        t.add(cb2);
+        bold = new JButton("B");
+        italic = new JButton("I");
+        bg = bold.getBackground();
+        c = new JButton("Compile");
+        r = new JButton("Run");
+        t.add(bold);
+        t.add(italic);
+        t.add(c);
+        t.add(r);
+        
+        b = new JMenuBar();
+        File  = new JMenu("File");
+        File.setMnemonic(KeyEvent.VK_F);
+        Edit  = new JMenu("Edit");
+        Edit.setMnemonic(KeyEvent.VK_E);
+        Execute  = new JMenu("Execute");
+        Execute.setMnemonic(KeyEvent.VK_X);
+        Help  = new JMenu("Help");
+        Help.setMnemonic(KeyEvent.VK_H);
+        Format  = new JMenu("Format");
+        Format.setMnemonic(KeyEvent.VK_O);
+        
+        New = new JMenuItem("New");
+        New.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,KeyEvent.CTRL_MASK));
+        Open = new JMenuItem("Open");
+        Open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,KeyEvent.CTRL_MASK));
+        Save = new JMenuItem("Save");
+        Save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,KeyEvent.CTRL_MASK));
+        SaveAs = new JMenuItem("SaveAs");
+        Close = new JMenuItem("Close");
+        Cut = new JMenuItem("Cut");
+        Cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,KeyEvent.CTRL_MASK));
+        Copy = new JMenuItem("Copy");
+        Copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_MASK));
+        Paste = new JMenuItem("Paste");
+        Paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,KeyEvent.CTRL_MASK));
+        SelectAll = new JMenuItem("SelectAll");
+        SelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,KeyEvent.CTRL_MASK));
+        color = new JMenuItem("Color");
+        undo = new JMenuItem("Undo");
+        ffont = new JMenuItem("Font");
+        Compile = new JMenuItem("Compile");
+        Compile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9,KeyEvent.CTRL_MASK));
+        Run = new JMenuItem("Run");
+        Run.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10,KeyEvent.CTRL_MASK));
+        Run_Applet = new JMenuItem("Run_Applet");
+        Run_Applet.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11,KeyEvent.CTRL_MASK));
+        Help1 = new JMenuItem("Help Contents");
+        About = new JMenuItem("About editor");
+        
+        sp = new JScrollPane(ta);
+        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        //b.setBounds(5,5,1495,45);
+        //ta.setBounds(5,50,1200,600);
+        //sp.setBounds(1150,50,25,500);
+        
+        Cut.addActionListener(this);
+        Copy.addActionListener(this);
+        Paste.addActionListener(this);
+        SelectAll.addActionListener(this);
+        New.addActionListener(this);
+        Open.addActionListener(this);
+        Save.addActionListener(this);
+        Close.addActionListener(this);
+        color.addActionListener(this);
+        cb1.addItemListener(this);
+        cb2.addItemListener(this);
+        Compile.addActionListener(this);
+        Run.addActionListener(this);
+        Run_Applet.addActionListener(this);
+        c.addActionListener(this);
+        r.addActionListener(this);
+        ffont.addActionListener(this);
+        About.addActionListener(this);
+        bold.addActionListener(this);
+        italic.addActionListener(this);
+        for(int i=0;i<6;i++)
+            button[i].addActionListener(this);
+        
+        
+        p1.add(b,BorderLayout.NORTH);
+        p1.add(t,BorderLayout.SOUTH);
+        
+        f.add(p1,BorderLayout.NORTH);
+        f.add(sp,BorderLayout.CENTER);
+        b.add(File);b.add(Edit);b.add(Format);b.add(Execute);b.add(Help);
+        File.add(New);
+        File.add(Open);File.add(Save);File.add(SaveAs);File.add(Close);
+        Edit.add(undo);Edit.add(Cut);Edit.add(Copy);Edit.add(Paste);Edit.add(SelectAll);
+        Format.add(color);Format.add(ffont);
+        Execute.add(Compile);Execute.add(Run);Execute.add(Run_Applet);
+        Help.add(Help1);Help.add(About);
+        
+       // Login.applysettings();
+        
+        p1.setVisible(true);
+      
+        f.setSize(1200,600);
+        
+        f.setVisible(true);
+    }  
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource()==Close)
+            System.exit(0);
+        if((e.getSource()==Cut)||(e.getSource()==button[3]))
+            ta.cut();
+        if((e.getSource()==Copy)||(e.getSource()==button[4]))
+            ta.copy();
+        if((e.getSource()==Paste)||(e.getSource()==button[5]))
+            ta.paste();
+        if(e.getSource()==undo)
+        {
+        	
+        }
+        if(e.getSource()==SelectAll)
+            ta.selectAll();
+        if((e.getSource()==Save)||(e.getSource()==button[2]))
+            ob1.fsave();
+        if((e.getSource()==Open)||(e.getSource()==button[1]))
+            ob1.fopen();
+        if((e.getSource()==New)||(e.getSource()==button[0]))
+        {
+            new ll();
+        }
+        if(e.getSource()==color)
+            envir.fcolor();
+        if(e.getSource()==ffont)
+            envir.ffont();
+        if(e.getSource()==About)
+            envir.feditor();
+        if(e.getSource()==Compile||e.getSource()==c)
+            exe.fcompile();
+        if(e.getSource()==Run||e.getSource()==r)
+            exe.frun();            
+        if(e.getSource()==Run_Applet)
+            exe.Rapplet();
+        if(e.getSource()==bold )
+        {
+            if(vstyle==true)
+            {
+                vstyle=false;
+                bold.setBackground(Color.white);              
+            }
+            else
+            {
+                vstyle=true;
+                bold.setBackground(bg);
+            }
+            if((vstyle==false) && (vsize==true))
+            {
+                fontSet(fselect1,1,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==false) && (vsize==false))
+            {
+                fontSet(fselect1,3,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==false))
+            {
+                fontSet(fselect1,2,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==true))
+            {
+                fontSet(fselect1,0,Integer.parseInt(fselect2));
+            }
+        }
+        if(e.getSource()==italic)
+        {
+            if(vsize==true)
+            {
+                vsize=false;
+                italic.setBackground(Color.white);  
+            }
+            else
+            {
+                vsize=true;
+                italic.setBackground(bg);
+            }
+            if((vstyle==false) && (vsize==true))
+            {
+                fontSet(fselect1,1,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==false) && (vsize==false))
+            {
+                fontSet(fselect1,3,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==false))
+            {
+                fontSet(fselect1,2,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==true))
+            {
+                fontSet(fselect1,0,Integer.parseInt(fselect2));
+            }
+        }
+    }
+    public void itemStateChanged(ItemEvent evt)
+    {
+        if(evt.getSource()==cb1)
+        {
+            fselect1=(String)cb1.getSelectedItem();
+            if((vstyle==false) && (vsize==true))
+            {
+                fontSet(fselect1,1,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==false) && (vsize==false))
+            {
+                fontSet(fselect1,3,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==false))
+            {
+                fontSet(fselect1,2,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==true))
+            {
+                fontSet(fselect1,0,Integer.parseInt(fselect2));
+            }
+        }
+        if(evt.getSource()==cb2)
+        {
+            fselect2= String.valueOf(cb2.getSelectedItem());
+            if((vstyle==false) && (vsize==true))
+            {
+                fontSet(fselect1,1,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==false) && (vsize==false))
+            {
+                fontSet(fselect1,3,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==false))
+            {
+                fontSet(fselect1,2,Integer.parseInt(fselect2));
+            }
+            else if((vstyle==true) && (vsize==true))
+            {
+                fontSet(fselect1,0,Integer.parseInt(fselect2));
+            }
+        }
+    }
+   static void fontSet(String name,int style,int size)
+    {
+        if(style==0)
+        {
+        ta.setFont(new Font(name,style,size*2));    
+        }
+        else if(style==1)
+        {
+        ta.setFont(new Font(name,style,size*2));
+        }
+        else if(style==2)
+        {
+        ta.setFont(new Font(name,style,size*2));
+        }
+        else if(style==3)
+        {
+        ta.setFont(new Font(name,style,size*2));    
+        }
+    }
+    public static void main(String args[])
+    {
+       new MyProgress();
+       MyFrame frame = new MyFrame();
+    }
+    
+	public void windowActivated(WindowEvent arg0) {}
+	public void windowClosed(WindowEvent arg0) {}
+	public void windowDeactivated(WindowEvent arg0) {}
+	public void windowDeiconified(WindowEvent arg0) {}	
+	public void windowIconified(WindowEvent arg0) {}
+	public void windowOpened(WindowEvent arg0){}
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+
+
+

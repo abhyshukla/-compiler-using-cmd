@@ -1,0 +1,39 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+public class MyProgress
+{
+    JFrame f;
+    JProgressBar jb;
+    JLabel l;
+    int i=0,num=0;
+    MyProgress()
+    {
+        f = new JFrame();
+        
+        l = new JLabel("PLEASE WAIT..");
+        jb = new JProgressBar(0,800);
+        jb.setValue(0);
+        jb.setStringPainted(true);
+        l.setBounds(150,25,100,100);
+        jb.setBounds(100,150,200,20);
+        f.add(l);
+        f.add(jb);
+        f.setSize(400,320);
+        f.setLayout(null);
+        f.setVisible(true);
+        f.setLocation(470,200);
+        while(i<=2000)
+        {
+            jb.setValue(i);
+            i=i+80;
+            try{
+                Thread.sleep(100);
+            }
+            catch(Exception e)
+            {}
+        }
+        f.setVisible(false);
+        f.dispose();
+    }
+}

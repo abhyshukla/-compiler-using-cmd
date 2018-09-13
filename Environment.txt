@@ -1,0 +1,277 @@
+	import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+public class Environment implements ActionListener , ListSelectionListener
+{
+    JButton forground,background,cok,ccancel,fok,fcancel;
+    JTextField demoText,fn,fst,fsi;
+    JDialog dcolor,aeditor,dfont;
+    JColorChooser jcc;
+    JScrollPane jln,jlst,jlsi;
+    JList ln,lst,lsi;
+    static Color dcol,dcol1;
+    static int fr,fg,fb;
+    static int br,bg,bb;
+    void feditor()
+    {
+        aeditor = new JDialog(MyFrame.f,"About Editor",true);
+        Container content = aeditor.getContentPane();
+        Font font = new Font("Serif",Font.PLAIN,30);
+        content.setFont(font);
+        String labeltext="<html><u><h1><FONT COLOR=RED>Java Compiler</FONT></h1></u></html>";
+        JLabel coloredlabel = new JLabel(labeltext,JLabel.CENTER);
+        content.add(coloredlabel,BorderLayout.NORTH);
+        labeltext = "";
+        JLabel boldlabel = new JLabel(labeltext,new ImageIcon("cupanim.gif"),JLabel.CENTER);
+        content.add(boldlabel,BorderLayout.CENTER);
+        labeltext = "<html><CENTER><U><B>HARPREET GILL--16BCS1267<ul>NITESH KUMAR--16BCS1253<ul>ABHINAY SHUKLA--16BCS1284</B></U></CENTER>"+
+                "<p>"+
+                "Details :"+
+                "<ul>"+
+                "<li>Btech in CSE"+
+                
+                "<li> SECTION : CSE4"+
+                "</ul>";
+        JLabel fancylabel = new JLabel(labeltext,JLabel.CENTER);
+        fancylabel.setBorder(BorderFactory.createTitledBorder("Developed by"));
+        content.add(fancylabel,BorderLayout.SOUTH);
+        
+        aeditor.setLocation(500,200);
+        aeditor.setBounds(0,0,300,350);
+        aeditor.setVisible(true);
+    }
+    void fcolor()
+    {
+    //	Color ab=new Color
+        demoText = new JTextField("Aa");
+        demoText.setFont(new Font("Times New Roman",Font.BOLD,180));
+        dcol = MyFrame.ta.getBackground();
+        dcol1 = MyFrame.ta.getForeground();
+        demoText.setBackground(dcol);
+        demoText.setForeground(dcol1);
+        demoText.setEditable(false);
+        
+        forground = new JButton("Foreground");
+        background = new JButton("Background");
+        cok = new JButton("OK");
+        ccancel = new JButton("Cancel");
+        
+        dcolor = new JDialog(MyFrame.f,"Color",true);
+        Container con = dcolor.getContentPane();
+        
+        con.setLayout(null);
+        con.add(demoText);
+        demoText.setBounds(25,20,250,180);
+        con.add(forground);
+        forground.setBounds(40,220,110,40);
+        forground.addActionListener(this);
+        con.add(background);
+        background.setBounds(150,220,110,40);
+        background.addActionListener(this);
+        con.add(cok);
+        cok.setBounds(40,270,110,40);
+        cok.addActionListener(this);
+        con.add(ccancel);
+        ccancel.setBounds(150,270,110,40);
+        ccancel.addActionListener(this);
+        dcolor.setBounds(0,0,300,350);
+        dcolor.setVisible(true);
+    }
+    void ffont()
+    {
+        dfont=new JDialog(MyFrame.f,"Font",true);
+        jln=new JScrollPane(ln=new JList());
+        jlst=new JScrollPane(lst=new JList());
+        jlsi=new JScrollPane(lsi=new JList());
+        fok=new JButton("Ok");
+        fcancel=new JButton("Cancel");
+        fn=new JTextField();
+        fst=new JTextField();
+        fsi=new JTextField();
+        GraphicsEnvironment tk=GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String font1[]=tk.getAvailableFontFamilyNames();
+        String size1[]=new String[50];
+        String style1[]={"Regular","Bold","Italic","Bold Italic"};
+        for(int i=0;i<50;i++)
+        {
+            size1[i]=String.valueOf(i*2+2);
+        }
+        Container cf=dfont.getContentPane();
+        cf.setLayout(null);
+        cf.add(fn);
+        fn.setBounds(20,30,130,30);
+        fn.setText((String)MyFrame.cb1.getSelectedItem());
+        cf.add(fsi);
+        fsi.setBounds(160,30,50,30);
+        fsi.setText(String.valueOf(MyFrame.cb2.getSelectedItem()));
+        cf.add(fst);
+        fst.setBounds(220,30,60,30);
+        if(MyFrame.vstyle==false  && MyFrame.vsize==true)
+        {
+            fst.setText("Bold");
+        }
+        else if(MyFrame.vstyle==false  && MyFrame.vsize==false)
+        {
+            fst.setText("Bold Italic");
+        }
+        else if(MyFrame.vstyle==true  && MyFrame.vsize==false)
+        {
+            fst.setText("Italic");
+        }
+        else if(MyFrame.vstyle==true  && MyFrame.vsize==true)
+        {
+            fst.setText("Regular");
+        }
+        cf.add(jln);
+        ln.setListData(font1);
+        ln.addListSelectionListener(this);
+        jln.setBounds(20,70,130,110);
+        cf.add(jlsi);
+        jlsi.setBounds(160,70,50,110);
+        lsi.setListData(size1);
+        lsi.addListSelectionListener(this);
+        lsi.setFont(new Font("Times New Roman",Font.PLAIN,13));
+        cf.add(jlst);
+        jlst.setBounds(220,70,60,110);
+        lst.setListData(style1);
+        lst.addListSelectionListener(this);
+        cf.add(fok);
+        fok.setBounds(40,210,100,30);
+        fok.addActionListener(this);
+        cf.add(fcancel);
+        fcancel.addActionListener(this);
+        fcancel.setBounds(160,210,100,30);
+        dfont.setBounds(250,150,305,300);
+        dfont.setVisible(true); 
+    }
+    public void valueChanged(ListSelectionEvent ex)
+    {
+        if(ex.getSource()==ln)
+        {
+            String s = String.valueOf(ln.getSelectedValue());
+            fn.setText(s);
+        }
+        if(ex.getSource()==lsi)
+        {
+            String s = String.valueOf(lsi.getSelectedValue());
+            fsi.setText(s);
+        }
+        if(ex.getSource()==lst)
+        {
+            String s = String.valueOf(lst.getSelectedValue());
+            fst.setText(s);
+        }
+    }
+    Color H;
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource()==forground)
+        {
+            jcc = new JColorChooser();
+            H = jcc.getColor();
+            
+            dcol = jcc.showDialog(MyFrame.ta,"Foreground",H);
+            if(dcol!=null&&(!(dcol.equals(dcol1))))
+            {
+                demoText.setForeground(dcol);
+                MyFrame.ta.setCaretColor(dcol);
+            }
+            else
+                System.out.println("Foreground color "+dcol+dcol1);
+        }
+        if(e.getSource()==background)
+        {
+            jcc = new JColorChooser();
+            Color H = jcc.getColor();
+            br=H.getRed();
+            bg=H.getGreen();
+            bb=H.getBlue();
+            dcol1 = jcc.showDialog(MyFrame.ta,"Background",H);
+            if(dcol!=null&&(!(dcol1.equals(dcol))))
+            {
+                demoText.setBackground(dcol1);
+            }
+            else
+                System.out.println("BackGround color "+dcol+dcol1);
+        }
+        if(e.getSource()==cok)
+        {
+        	fr=dcol.getRed();
+            fg=dcol.getGreen();
+            fb=dcol.getBlue();
+            
+            br=dcol1.getRed();
+            bg=dcol1.getGreen();
+            bb=dcol1.getBlue();           
+            MyFrame.ta.setBackground(demoText.getBackground());
+            MyFrame.ta.setForeground(demoText.getForeground());
+            dcolor.setVisible(false);
+        }
+        if(e.getSource()==ccancel)
+            dcolor.setVisible(false);
+        
+        if(e.getSource()==fok)
+        {
+            MyFrame.cb1.setSelectedItem(fn.getText());
+            MyFrame.cb2.setSelectedItem(fsi.getText());
+            if(fst.getText().equals("Bold"))
+			{
+			    MyFrame.vstyle=false;
+			    MyFrame.vsize=true;
+				fontSet(fn.getText(),1,Integer.parseInt(fsi.getText()));
+				MyFrame.italic.setBackground(MyFrame.bg);
+				MyFrame.bold.setBackground(Color.white);
+			}
+			else if(fst.getText().equals("Bold Italic"))
+			{
+			    MyFrame.vstyle=false;
+			    MyFrame.vsize=false;
+				fontSet(fn.getText(),3,Integer.parseInt(fsi.getText()));
+				MyFrame.bold.setBackground(Color.white);
+				MyFrame.italic.setBackground(Color.white);
+			}
+			else if(fst.getText().equals("Italic"))
+			{
+			    MyFrame.vstyle=true;
+			    MyFrame.vsize=false;
+				fontSet(fn.getText(),2,Integer.parseInt(fsi.getText()));
+				MyFrame.bold.setBackground(MyFrame.bg);
+				MyFrame.italic.setBackground(Color.white);
+			}
+			else if(fst.getText().equals("Regular"))
+			{
+			    MyFrame.vstyle=true;
+			    MyFrame.vsize=true;
+				fontSet(fn.getText(),0,Integer.parseInt(fsi.getText()));
+				MyFrame.bold.setBackground(MyFrame.bg);
+				MyFrame.italic.setBackground(MyFrame.bg);
+			}
+        }
+        if(e.getSource()==fcancel)
+        {
+            dfont.setVisible(false);
+        }
+    }
+    
+    void fontSet(String name,int style,int size)
+    {
+        if(style==0)
+        {
+        MyFrame.ta.setFont(new Font(name,style,size*2));    
+        }
+        else if(style==1)
+        {
+        MyFrame.ta.setFont(new Font(name,style,size*2));
+        }
+        else if(style==2)
+        {
+        MyFrame.ta.setFont(new Font(name,style,size*2));
+        }
+        else if(style==3)
+        {
+        MyFrame.ta.setFont(new Font(name,style,size*2));    
+        }
+    }
+
+}
